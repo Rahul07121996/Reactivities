@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Presistance;
 using System;
+using MediatR;
+using Application.Activities.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +14,15 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"));
 });
 
+builder.Services.AddCors();
+builder.Services.AddMediatR(x=>
+x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
 var app = builder.Build();
 
-
+app.UseCors(option =>
+{
+    option.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001");
+});
 
 app.MapControllers();
 using var scope = app.Services.CreateScope();
