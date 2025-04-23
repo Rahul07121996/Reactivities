@@ -1,41 +1,59 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Repositry;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presistance;
-using System.Diagnostics;
-using Domain;
-using MediatR;
-using Application.Activities.Queries;
 
 namespace API.Controllers
 {
 
-    public class ActivitiesController(AppDbContext dbContext, IMediator mediator) : BaseApiController
+    public class ActivitiesController(IActivityRepositry activityRepositry) : BaseApiController
     {
-        //private readonly AppDbContext dbContext;
-
-        //public ActivitiesController(AppDbContext dbContext,IMediator mediator)
-        //{
-        //    this.dbContext = dbContext;
-        //}
 
         [HttpGet]
        
         public async Task<ActionResult<List<Domain.Activity>>> GetActivities()
         {
-            return await mediator.Send(new GetActivityList.Query());
+            return await activityRepositry.GetActivitiesAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Domain.Activity>> GetActivity(string id)
         {
-            var activity = await dbContext.Activities.FindAsync(id);
+            var activity = await activityRepositry.GetActivityByIdAsync(id);
 
-            if (activity == null) return NotFound();
-           
-            //comment
-            //aa
+            if (activity == null)
+            {
+                return NotFound();
+            }
+
             return activity;
         }
+
+        //[HttpPost]
+
+        //public async Task<ActionResult<string>> CreateActivity(Domain.Activity activity)
+        //{
+        //   return  await mediator.Send(new CreateActivity.Command { Activity = activity });
+
+
+        //}
+
+        //[HttpPut]
+
+        //public async Task<ActionResult> EditActivity(Domain.Activity activity)
+        //{
+        //     await mediator.Send(new EditActivity.Command { Activity = activity });
+
+        //    return NoContent();
+
+        //}
+        //[HttpDelete]
+        //public async Task<ActionResult> DeleteActivity(string id)
+        //{
+        //    await mediator.Send(new DeleteActivity.Command { Id = id });
+
+        //    return Ok();
+        //}
+
     }
 
 }

@@ -1,8 +1,7 @@
+using Application.Repositry;
 using Microsoft.EntityFrameworkCore;
 using Presistance;
-using System;
-using MediatR;
-using Application.Activities.Queries;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +12,10 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"));
 });
+builder.Services.AddScoped<IActivityRepositry,ActivityRepository>();
 
 builder.Services.AddCors();
-builder.Services.AddMediatR(x=>
-x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
+
 var app = builder.Build();
 
 app.UseCors(option =>
