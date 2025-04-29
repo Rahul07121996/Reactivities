@@ -12,7 +12,7 @@ namespace Application.Repositry
         Task<List<Activity>> GetActivitiesAsync();
         Task<Activity> GetActivityByIdAsync(string id);
         Task AddActivityAsync(Activity activity);
-        //Task UpdateActivityAsync(Activity activity);
-        //Task DeleteActivityAsync(int id);
+        Task UpdateActivityAsync(Activity activity);
+        Task DeleteActivityAsync(Activity activity);
     }
 }

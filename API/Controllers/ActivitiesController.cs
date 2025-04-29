@@ -28,31 +28,37 @@ namespace API.Controllers
             return activity;
         }
 
-        //[HttpPost]
+        [HttpPost]
 
-        //public async Task<ActionResult<string>> CreateActivity(Domain.Activity activity)
-        //{
-        //   return  await mediator.Send(new CreateActivity.Command { Activity = activity });
+        public async Task<ActionResult> CreateActivity([FromBody] Domain.Activity activity)
+        {
+            await activityRepositry.AddActivityAsync(activity);
+            return Ok(activity);
 
 
-        //}
+        }
 
-        //[HttpPut]
+        [HttpPut("{Id}")]
 
-        //public async Task<ActionResult> EditActivity(Domain.Activity activity)
-        //{
-        //     await mediator.Send(new EditActivity.Command { Activity = activity });
+        public async Task<ActionResult> EditActivity(string Id, [FromBody]Domain.Activity activity)
+        {
+            var exitising = await activityRepositry.GetActivityByIdAsync(Id);
+            if(exitising == null) return NotFound();
 
-        //    return NoContent();
+            await activityRepositry.UpdateActivityAsync(exitising);
+            return Ok(activity);
 
-        //}
-        //[HttpDelete]
-        //public async Task<ActionResult> DeleteActivity(string id)
-        //{
-        //    await mediator.Send(new DeleteActivity.Command { Id = id });
+        }
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult> DeleteActivity(string Id)
+        {
+            var existing = await activityRepositry.GetActivityByIdAsync(Id);
+            if (existing == null) return NotFound();
 
-        //    return Ok();
-        //}
+            await activityRepositry.DeleteActivityAsync(existing);
+
+            return Ok();
+        }
 
     }
 

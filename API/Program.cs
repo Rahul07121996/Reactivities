@@ -1,3 +1,4 @@
+using API.GlobalException;
 using Application.Repositry;
 using Microsoft.EntityFrameworkCore;
 using Presistance;
@@ -23,6 +24,7 @@ app.UseCors(option =>
     option.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001");
 });
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
